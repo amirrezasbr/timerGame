@@ -1,6 +1,18 @@
-export default function ResultModal({ result, targetTime }) {
+// react 19 or above method
+import { useImperativeHandle, useRef } from "react";
+
+export default function ResultModal({ ref, result, targetTime }) {
+  const dialog = useRef();
+  useImperativeHandle(ref, () => {
+    return {
+      open() {
+        dialog.current.showModal();
+      },
+    };
+  });
+
   return (
-    <dialog className="result-modal" open>
+    <dialog ref={dialog} className="result-modal">
       <h2>You {result}</h2>
       <p>
         The target time was <strong>{targetTime} seconds.</strong>
@@ -14,3 +26,24 @@ export default function ResultModal({ result, targetTime }) {
     </dialog>
   );
 }
+
+// below the react 19  method
+
+// import { forwardRef } from "react";
+// const ResultModal = forwardRef(({ result, targetTime }, ref) => {
+//   return (
+//     <dialog ref={ref} className="result-modal">
+//       <h2>You {result}</h2>
+//       <p>
+//         The target time was <strong>{targetTime} seconds.</strong>
+//       </p>
+//       <p>
+//         You stopped the timer with <strong>X seconds left.</strong>
+//       </p>
+//       <form method="dialog">
+//         <button>Close</button>
+//       </form>
+//     </dialog>
+//   );
+// });
+// export default ResultModal;
